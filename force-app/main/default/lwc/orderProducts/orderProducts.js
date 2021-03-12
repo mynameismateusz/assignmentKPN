@@ -32,7 +32,7 @@ export default class OrderProducts extends LightningElement {
     @track products;
     @wire(getOrderProducts, { orderId: '$recordId' })
     wiredOrderProducts
-    ({error,data}) {
+    ({error, data}) {
         if (data) {
             // Do deep copy of array objects and add the 'Name' property
             this.products = data.map(p => Object.assign({}, p, { Name: p.Product2.Name }));
