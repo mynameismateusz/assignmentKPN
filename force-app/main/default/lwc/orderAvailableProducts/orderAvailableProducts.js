@@ -2,8 +2,9 @@ import { api, LightningElement, track, wire } from 'lwc';
 import { sort } from 'c/utils';
 import getAvailableProducts from '@salesforce/apex/AvailableProductsController.getAvailableProducts';
 import getOrderProducts from '@salesforce/apex/AvailableProductsController.getOrderProducts';
+import insertOrderItem from '@salesforce/apex/AvailableProductsController.insertOrderItem';
 
-
+const ADD_BUTTON_NAME = 'add_button';
 const COLUMNS = [
     { label: 'Name', fieldName: 'Name', sortable: true },
     {
@@ -12,6 +13,16 @@ const COLUMNS = [
         type: 'currency',
         sortable: true,
         cellAttributes: { alignment: 'left' },
+    },
+    {
+        type: 'button',
+        initialWidth: 75,
+        typeAttributes: {
+            label: 'Add',
+            title: 'Add',
+            variant: 'brand',
+            name: ADD_BUTTON_NAME
+        }
     }
 ];
 
@@ -36,6 +47,7 @@ export default class OrderAvailableProducts extends LightningElement {
         }
     }
     columns = COLUMNS;
+    showSpinner = false;
     defaultSortDirection = 'asc';
     sortDirection = 'asc';
     sortedBy;
@@ -45,5 +57,43 @@ export default class OrderAvailableProducts extends LightningElement {
         this.products = res.data;
         this.sortDirection = res.sortDirection;
         this.sortedBy = res.sortedBy;
+    }
+
+    handleRowAction(event) {
+        this.showSpinner = true;
+        if (event.detail.action.name === ADD_BUTTON_NAME) {
+            this.upsertOrderItem(this.createOrderItem(event.detail.row, this.recordId));
+        }
+    }
+
+    createOrderItem(pricebookEntry, orderId) {
+        let orderItem = {
+            Product2Id: pricebookEntry.Product2Id,
+            OrderId: orderId,
+            UnitPrice: pricebookEntry.UnitPrice,
+            ListPrice: pricebookEntry.UnitPrice,
+            TotalPrice: pricebookEntry.UnitPrice,
+            PricebookEntryId: pricebookEntry.Id,
+            Quantity: 1,
+            Product2: {
+                Name: pricebookEntry.Name,
+                Id: pricebookEntry.Product2Id
+            }
+        };
+        return orderItem;
+    }
+
+    upsertOrderItem(orderItem) {
+        console.log(orderItem);
+        insertOrderItem({ orderId: this.recordId, jsonOrderItem: orderItem})
+            .then(result => {
+                console.log(result);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                this.showSpinner = false;
+            });
     }
 }

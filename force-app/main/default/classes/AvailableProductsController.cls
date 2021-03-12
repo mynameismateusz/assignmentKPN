@@ -19,4 +19,11 @@ public with sharing class AvailableProductsController extends AuraController {
             throw new AuraHandledException(e.getMessage());
         }
     }
+
+    @AuraEnabled
+    public static OrderItem insertOrderItem(Id orderId, Map<String, Object> jsonOrderItem) {
+        validateId(orderId, Order.getSObjectType());
+        OrderItem item = (OrderItem) deserializeSObjectJSON(jsonOrderItem, OrderItem.SObjectType);
+        return null;
+    }
 }

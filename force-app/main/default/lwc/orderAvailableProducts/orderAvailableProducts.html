@@ -3,7 +3,7 @@
         <lightning-layout-item size='12'>
             <lightning-card title="Available Products" icon-name="standard:checkout">
                 <template if:true={availableProducts}>
-                    <lightning-datatable
+                    <lightning-datatable class="slds-var-p-horizontal_x-small"
                             key-field="id"
                             columns={columns}
                             data={availableProducts}
@@ -11,9 +11,14 @@
                             default-sort-direction={defaultSortDirection}
                             sorted-direction={sortDirection}
                             sorted-by={sortedBy}
-                            onsort={onHandleSort}>
+                            onsort={onHandleSort}
+                            onrowaction={handleRowAction}>
                     </lightning-datatable>
                 </template>
+                <div if:true={showSpinner}>
+                    <lightning-spinner alternative-text="Loading..." variant="brand">
+                    </lightning-spinner>
+                </div>
             </lightning-card>
         </lightning-layout-item>
     </lightning-layout>
