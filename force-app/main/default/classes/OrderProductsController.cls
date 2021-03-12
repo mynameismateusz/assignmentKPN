@@ -1,15 +1,10 @@
-public with sharing class OrderProductsController {
+public with sharing class OrderProductsController extends AuraController {
 
     @AuraEnabled(Cacheable=true)
     public static List<OrderItem> getOrderProducts(Id orderId) {
-        if (String.isBlank(orderId)) {
-            throw new AuraHandledException('Order Id is empty');
-        }
-        if (orderId.getSObjectType() != Order.getSObjectType()) {
-            throw new AuraHandledException('Provided Id is of an incorrect type');
-        }
+        validateId(orderId, Order.getSObjectType());
         try {
-            return OrderProductsService.getOrderProducts(orderId);
+            return OrderProductsService.getOrderProductsByOrderId(orderId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
