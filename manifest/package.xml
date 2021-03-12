@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>AuraController</members>
         <members>AvailableProductsController</members>
         <members>AvailableProductsService</members>
+        <members>OrderItemSelector</members>
         <members>OrderProductsController</members>
         <members>OrderProductsService</members>
+        <members>OrderSelector</members>
+        <members>PricebookEntrySelector</members>
         <name>ApexClass</name>
     </types>
     <types>
