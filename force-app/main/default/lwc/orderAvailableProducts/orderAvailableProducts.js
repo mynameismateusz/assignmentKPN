@@ -1,11 +1,7 @@
-import { LightningElement } from 'lwc';
+import { api, LightningElement, track, wire } from 'lwc';
 import { sort } from 'c/utils';
+import getAvailableProducts from '@salesforce/apex/AvailableProductsController.getAvailableProducts';
 
-const TEST_DATA = [
-    { id: 1, Name: 'Prod1', UnitPrice: 10 },
-    { id: 2, Name: 'Prod2', UnitPrice: 20 },
-    { id: 3, Name: 'Prod3', UnitPrice: 30 }
-];
 
 const COLUMNS = [
     { label: 'Name', fieldName: 'Name', sortable: true },
@@ -19,7 +15,17 @@ const COLUMNS = [
 ];
 
 export default class OrderAvailableProducts extends LightningElement {
-    data = TEST_DATA;
+    @api recordId;
+    @track availableProducts;
+    @wire(getAvailableProducts, { orderId: '$recordId' })
+    wiredAvailableProducts
+    ({error,data}) {
+        if (data) {
+            this.availableProducts = data;
+        } else if (error) {
+            console.log(error)
+        }
+    }
     columns = COLUMNS;
     defaultSortDirection = 'asc';
     sortDirection = 'asc';
