@@ -5,6 +5,7 @@
         <name>FlexiPage</name>
     </types>
     <types>
+        <members>orderAvailableProducts</members>
         <members>orderProducts</members>
         <name>LightningComponentBundle</name>
     </types>

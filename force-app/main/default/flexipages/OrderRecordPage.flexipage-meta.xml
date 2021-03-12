@@ -75,6 +75,15 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentName>orderAvailableProducts</componentName>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-c72e5d6b-10a9-444d-9c17-151fa68e8e2f</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>body</name>
                     <value>Facet-18b20353-3128-47bc-808b-199ed21b7b38</value>
@@ -103,6 +112,19 @@
                 <componentName>flexipage:tab</componentName>
             </componentInstance>
         </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-c72e5d6b-10a9-444d-9c17-151fa68e8e2f</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>title</name>
+                    <value>Add Products</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tab</componentName>
+            </componentInstance>
+        </itemInstances>
         <name>Facet-587e9d25-7bb3-43f0-b080-02f3578bd8b7</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -120,6 +142,11 @@
         <type>Region</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>orderProducts</componentName>
+            </componentInstance>
+        </itemInstances>
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
