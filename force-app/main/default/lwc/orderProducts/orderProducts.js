@@ -1,10 +1,5 @@
-import { LightningElement } from 'lwc';
-
-const TEST_DATA = [
-    { id: 1, Name: 'Prod1', UnitPrice: 10, Quantity: 40, TotalPrice: 400 },
-    { id: 2, Name: 'Prod2', UnitPrice: 20, Quantity: 40, TotalPrice: 800 },
-    { id: 3, Name: 'Prod3', UnitPrice: 30, Quantity: 40, TotalPrice: 1200 }
-];
+import { api, LightningElement, track, wire } from 'lwc';
+import getOrderProducts from '@salesforce/apex/OrderProductsController.getOrderProducts';
 
 const COLUMNS = [
     { label: 'Name', fieldName: 'Name', sortable: true },
@@ -32,7 +27,18 @@ const COLUMNS = [
 ];
 
 export default class OrderProducts extends LightningElement {
-    data = TEST_DATA;
+    @api recordId;
+    @track products;
+    @wire(getOrderProducts, { orderId: '$recordId' })
+    wiredOrderProducts
+    ({error,data}) {
+        if (data) {
+            // Do deep copy of array objects and add the 'Name' property
+            this.products = data.map(p => Object.assign({}, p, { Name: p.Product2.Name }));
+        } else if (error) {
+            console.log(error)
+        }
+    }
     columns = COLUMNS;
     defaultSortDirection = 'asc';
     sortDirection = 'asc';

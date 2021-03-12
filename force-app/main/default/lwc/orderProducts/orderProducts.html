@@ -2,16 +2,18 @@
     <lightning-layout>
         <lightning-layout-item size='12'>
             <lightning-card title="Order Products" icon-name="standard:orders">
-                <lightning-datatable
-                        key-field="id"
-                        columns={columns}
-                        data={data}
-                        hide-checkbox-column
-                        default-sort-direction={defaultSortDirection}
-                        sorted-direction={sortDirection}
-                        sorted-by={sortedBy}
-                        onsort={onHandleSort}>
-                </lightning-datatable>
+                <template if:true={products}>
+                    <lightning-datatable
+                            key-field="id"
+                            columns={columns}
+                            data={products}
+                            hide-checkbox-column
+                            default-sort-direction={defaultSortDirection}
+                            sorted-direction={sortDirection}
+                            sorted-by={sortedBy}
+                            onsort={onHandleSort}>
+                    </lightning-datatable>
+                </template>
             </lightning-card>
         </lightning-layout-item>
     </lightning-layout>
