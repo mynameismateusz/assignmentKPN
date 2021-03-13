@@ -125,7 +125,7 @@ export default class OrderAvailableProducts extends LightningElement {
     }
 
     /**
-     * Add Product to the Order via Apex and publish and event with the results
+     * Add Product to the Order via Apex and publish event with the results
      * @param {any} pricebookEntry Selected by clicking the 'Add' button
      */
     handleAddProduct(pricebookEntry) {

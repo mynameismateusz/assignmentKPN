@@ -34,8 +34,9 @@ public with sharing class AvailableProductsService {
     public static DMLService.DMLResult addOrderItem(Id orderId, OrderItem item) {
         List<OrderItem> orderItems = OrderItemSelector.getOrderItemsByOrderAndProductId(orderId, item.Product2Id);
         if (!orderItems.isEmpty()) {
-            item = orderItems[0];
-            item.Quantity ++;
+            OrderItem toUpsert = orderItems[0];
+            toUpsert.Quantity += item.Quantity;
+            item = toUpsert;
         }
         return DMLService.upsertRecords(new List<OrderItem>{item}, true)[0];
     }

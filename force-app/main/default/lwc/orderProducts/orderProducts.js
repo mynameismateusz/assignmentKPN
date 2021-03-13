@@ -109,7 +109,9 @@ export default class OrderProducts extends LightningElement {
         activateOrder({ orderId: this.recordId })
             .then(result => {
                 toastSuccess(this, `${OrderActivated}`);
-                publish(this.messageContext, ACTIVATE_ORDER_CHANNEL, { orderId: this.recordId });
+                // Send message with newly activated Order Id
+                publish(this.messageContext, ACTIVATE_ORDER_CHANNEL, { orderId: result.Id });
+                // Update wired Order to refresh the Status
                 this.updateRecordView();
             })
             .catch(error => {

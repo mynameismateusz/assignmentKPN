@@ -104,10 +104,11 @@ private class AvailableProductsController_Test {
     @IsTest
     static void addOrderItem_Upsert_POS() {
         //GIVEN
+        final Integer QUANTITY_TO_ADD = 10;
         Order o = [SELECT Id, Pricebook2Id FROM Order LIMIT 1];
         PricebookEntry entry = [SELECT Id, Product2Id FROM PricebookEntry LIMIT 1];
         OrderItem oi = TestDataFactory.createOrderItems(1, o.Id, entry)[0];
-        oi.Quantity = 10;
+        oi.Quantity = QUANTITY_TO_ADD;
         insert oi;
         Map<String, Object> deserializedItem = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(oi));
 
@@ -118,6 +119,6 @@ private class AvailableProductsController_Test {
 
         //THEN
         System.assertEquals(o.Id, insertedItem.OrderId, 'Order Id be set correctly');
-        System.assertEquals(oi.Quantity + 1, insertedItem.Quantity, 'Quantity be set correctly');
+        System.assertEquals(oi.Quantity + QUANTITY_TO_ADD, insertedItem.Quantity, 'Quantity be set correctly');
     }
 }
