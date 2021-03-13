@@ -7,6 +7,9 @@ import ACTIVATE_ORDER_CHANNEL from '@salesforce/messageChannel/Activate_Order__c
 import getOrderProducts from '@salesforce/apex/OrderProductsController.getOrderProducts';
 import activateOrder from '@salesforce/apex/OrderProductsController.activateOrder';
 import ORDER_STATUS from '@salesforce/schema/Order.Status';
+import ContactAdminErr from '@salesforce/label/c.ContactAdminErr';
+import OrderActivated from '@salesforce/label/c.OrderActivated';
+import OrderNotActivatedErr from '@salesforce/label/c.OrderNotActivatedErr';
 
 const COLUMNS = [
     { label: 'Name', fieldName: 'Name', sortable: true },
@@ -105,13 +108,13 @@ export default class OrderProducts extends LightningElement {
         this.showSpinner = true;
         activateOrder({ orderId: this.recordId })
             .then(result => {
-                toastSuccess(this, 'Order was activated successfully!');
+                toastSuccess(this, `${OrderActivated}`);
                 publish(this.messageContext, ACTIVATE_ORDER_CHANNEL, { orderId: this.recordId });
                 this.updateRecordView();
             })
             .catch(error => {
                 console.log(error);
-                toastWarning(this, `Order was not activated. Please contact your admin and share this error message: ${JSON.stringify(error, null, 2)}`);
+                toastWarning(this, `${OrderNotActivatedErr} ${ContactAdminErr} ${JSON.stringify(error, null, 2)}`);
             })
             .finally(() => {
                 this.showSpinner = false;

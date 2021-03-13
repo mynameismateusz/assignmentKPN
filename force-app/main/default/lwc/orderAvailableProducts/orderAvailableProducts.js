@@ -1,10 +1,17 @@
 import { api, LightningElement, track, wire } from 'lwc';
-import { sort } from 'c/utils';
-import { publish, MessageContext } from 'lightning/messageService';
+import { sort, toastSuccess, toastWarning } from 'c/utils';
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import { publish, subscribe, MessageContext } from 'lightning/messageService';
 import ADD_PRODUCT_CHANNEL from '@salesforce/messageChannel/Add_Order_Product__c';
+import ACTIVATE_ORDER_CHANNEL from '@salesforce/messageChannel/Activate_Order__c';
 import getAvailableProducts from '@salesforce/apex/AvailableProductsController.getAvailableProducts';
 import getOrderProducts from '@salesforce/apex/AvailableProductsController.getOrderProducts';
+import getOrderWithOrderProducts from '@salesforce/apex/AvailableProductsController.getOrderWithOrderProducts';
 import addOrderItem from '@salesforce/apex/AvailableProductsController.addOrderItem';
+import ORDER_STATUS from '@salesforce/schema/Order.Status';
+import ProductAdded from '@salesforce/label/c.ProductAdded';
+import ProductNotAddedErr from '@salesforce/label/c.ProductNotAddedErr';
+import ContactAdminErr from '@salesforce/label/c.ContactAdminErr';
 
 const ADD_BUTTON_NAME = 'add_button';
 const COLUMNS = [
@@ -36,10 +43,12 @@ export default class OrderAvailableProducts extends LightningElement {
     ({error, data}) {
         if (data) {
             const availableProducts = [...data];
-            getOrderProducts({ orderId: this.recordId })
-            .then((orderProds) => {
+            getOrderWithOrderProducts({ orderId: this.recordId })
+            .then((order) => {
+                // If order is Active => disable Add Product buttons
+                if (order.Status === 'Activated') this.disableAddButtons();
                 // Sorting available Products. If product was already added to the Order, it goes to the beginning of a list.
-                this.availableProducts = availableProducts.sort((a) => (orderProds.some(p => p.Product2Id == a.Product2Id) ? -1 : 1));
+                this.availableProducts = availableProducts.sort((a) => (order.OrderItems.some(p => p.Product2Id == a.Product2Id) ? -1 : 1));
             })
             .catch((error) => {
                 console.log(error);
@@ -48,6 +57,8 @@ export default class OrderAvailableProducts extends LightningElement {
             console.log(error)
         }
     }
+    @wire(getRecord, { recordId: '$recordId', fields: [], optionalFields: [ORDER_STATUS] })
+    order;
     @wire(MessageContext)
     messageContext;
     columns = COLUMNS;
@@ -55,6 +66,40 @@ export default class OrderAvailableProducts extends LightningElement {
     defaultSortDirection = 'asc';
     sortDirection = 'asc';
     sortedBy;
+
+    connectedCallback() {
+        this.subscribeToMessageChannel();
+    }
+
+    /**
+     * Subscribe to the Activate Order to receive events
+     */
+    subscribeToMessageChannel() {
+        this.subscription = subscribe(
+            this.messageContext,
+            ACTIVATE_ORDER_CHANNEL,
+            (message) => this.handleActivateOrderMsg(message.orderId)
+        );
+    }
+
+    /**
+     * Verify orderId and disable 'Add' buttons
+     * @param {String} orderId
+     */
+    handleActivateOrderMsg(orderId) {
+        if (this.recordId === orderId) {
+            this.disableAddButtons();
+            this.columns = [...this.columns];
+        }
+    }
+
+    /**
+     * Disable 'Add' buttons when Order is activated
+     * It's done by columns search in case the columns order is changed in the future
+     */
+    disableAddButtons() {
+        this.columns.find(c => c.type === 'button' && c.typeAttributes.name === ADD_BUTTON_NAME).typeAttributes.disabled = true;
+    }
 
     onHandleSort(event) {
         const res = sort(event, this.availableProducts);
@@ -70,14 +115,20 @@ export default class OrderAvailableProducts extends LightningElement {
         }
     }
 
+    /**
+     * Add Product to the Order via Apex and publish and event with the results
+     * @param {any} pricebookEntry Selected by clicking the 'Add' button
+     */
     handleAddProduct(pricebookEntry) {
         const orderItem = this.createOrderItem(pricebookEntry, this.recordId);
         addOrderItem({ orderId: this.recordId, jsonOrderItem: orderItem})
             .then(result => {
+                toastSuccess(this, `${ProductAdded}`);
                 // Send message with newly added Order Product
                 publish(this.messageContext, ADD_PRODUCT_CHANNEL, { OrderItem: result });
             })
             .catch(error => {
+                toastWarning(this, `${ProductNotAddedErr} ${ContactAdminErr} ${JSON.stringify(error, null, 2)}`);
                 console.log(error);
             })
             .finally(() => {
@@ -85,6 +136,12 @@ export default class OrderAvailableProducts extends LightningElement {
             });
     }
 
+    /**
+     * Create new Order Item record to upsert via Apex
+     * @param {any} pricebookEntry
+     * @param {String} orderId Id of the current Order
+     * @returns OrderItem ready to be send to Apex
+     */
     createOrderItem(pricebookEntry, orderId) {
         let orderItem = {
             Product2Id: pricebookEntry.Product2Id,

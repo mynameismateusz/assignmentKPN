@@ -25,7 +25,7 @@ public virtual with sharing class AuraController {
             return (SObject) JSON.deserialize(JSON.serialize(parsedData), Type.forName(sobjTypeName));
         } catch (Exception e) {
             throw new AuraHandledException(
-                String.format(Label.Object_Incorrect_Err, new List<String>{sobjTypeName})
+                String.format(Label.ObjectIncorrectErr, new List<String>{sobjTypeName})
             );
         }
     }
@@ -40,7 +40,7 @@ public virtual with sharing class AuraController {
     private static void isIdPopulated(String recordId, SObjectType type) {
         if (String.isBlank(recordId)) {
             throw new AuraHandledException(
-                String.format(Label.Id_Empty_Err, new List<String>{type.getDescribe().getLabel()})
+                String.format(Label.IdEmptyErr, new List<String>{type.getDescribe().getLabel()})
             );
         }
     }
@@ -48,7 +48,7 @@ public virtual with sharing class AuraController {
     @TestVisible
     private static void isId(String recordId) {
         if (!(recordId instanceOf Id)) {
-            throw new AuraHandledException(Label.Not_An_Id_Err);
+            throw new AuraHandledException(Label.NotAnIdErr);
         }
     }
 
@@ -61,7 +61,7 @@ public virtual with sharing class AuraController {
     @TestVisible
     private static void isIdCorrectType(Id recordId, SObjectType type) {
         if (recordId.getSObjectType() != type) {
-            throw new AuraHandledException(Label.Id_Incorrect_Type_Err);
+            throw new AuraHandledException(Label.IdIncorrectTypeErr);
         }
     }
 }

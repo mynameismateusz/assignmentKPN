@@ -23,6 +23,7 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>Activate_Order</members>
         <members>Add_Order_Product</members>
         <name>LightningMessageChannel</name>
     </types>
