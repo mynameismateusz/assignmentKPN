@@ -1,9 +1,12 @@
 import { api, LightningElement, track, wire } from 'lwc';
-import { sort } from 'c/utils';
-import { subscribe, MessageContext } from 'lightning/messageService';
+import { getRecord, getFieldValue, updateRecord } from 'lightning/uiRecordApi';
+import { sort, toastSuccess, toastWarning } from 'c/utils';
+import { publish, subscribe, MessageContext } from 'lightning/messageService';
 import ADD_PRODUCT_CHANNEL from '@salesforce/messageChannel/Add_Order_Product__c';
+import ACTIVATE_ORDER_CHANNEL from '@salesforce/messageChannel/Activate_Order__c';
 import getOrderProducts from '@salesforce/apex/OrderProductsController.getOrderProducts';
-
+import activateOrder from '@salesforce/apex/OrderProductsController.activateOrder';
+import ORDER_STATUS from '@salesforce/schema/Order.Status';
 
 const COLUMNS = [
     { label: 'Name', fieldName: 'Name', sortable: true },
@@ -43,9 +46,12 @@ export default class OrderProducts extends LightningElement {
             console.log(error)
         }
     }
+    @wire(getRecord, { recordId: '$recordId', fields: [], optionalFields: [ORDER_STATUS] })
+    order;
     @wire(MessageContext)
     messageContext;
     columns = COLUMNS;
+    showSpinner = false;
     defaultSortDirection = 'asc';
     sortDirection = 'asc';
     sortedBy;
@@ -54,25 +60,62 @@ export default class OrderProducts extends LightningElement {
         this.subscribeToMessageChannel();
     }
 
+    get isActivated() {
+        const orderStatus = getFieldValue(this.order.data, ORDER_STATUS);
+        return orderStatus === 'Activated' ? true : false;
+    }
+
+    /**
+     * Used to refresh the wired Order record.
+     * Since no other fields than Id are provided, no actual change is done in the DB
+     */
+    updateRecordView() {
+        updateRecord({fields: { Id: this.recordId }});
+    }
+
+    /**
+     * Subscribe to the Add Product to receive events
+     */
     subscribeToMessageChannel() {
         this.subscription = subscribe(
             this.messageContext,
             ADD_PRODUCT_CHANNEL,
-            (message) => this.handleAddProductMessage(message.OrderItem)
+            (message) => this.handleAddProductMsg(message.OrderItem)
         );
     }
 
-    handleAddProductMessage(item) {
-        let itemIndex = this.products.findIndex(p => p.Id === item.Id);
-        // findIndex() returns -1 if it can't find an item
-        if (itemIndex !== -1) {
-            // If item with the same Id was found in the list - increment the Quantity
-            this.products[itemIndex].Quantity ++;
+    /**
+     * Handle message and add new Product to the list
+     * Increases Quantity if Product was already added to the Order, otherwise adds a new entry
+     * @param {any} newItem New Order Item
+     */
+    handleAddProductMsg(newItem) {
+        let existingItem = this.products.find(p => p.Id === newItem.Id);
+        if (existingItem) {
+            // If item with the same Id was found in the list - update the Quantity
+            existingItem.Quantity = newItem.Quantity;
             this.products = [...this.products];
         } else {
             // If such item is not in the list, just flatten its Name and add it
-            this.products = [...this.products, Object.assign({}, item, { Name: item.Product2.Name })];
+            this.products = [...this.products, Object.assign({}, newItem, { Name: newItem.Product2.Name })];
         }
+    }
+
+    handleActivate() {
+        this.showSpinner = true;
+        activateOrder({ orderId: this.recordId })
+            .then(result => {
+                toastSuccess(this, 'Order was activated successfully!');
+                publish(this.messageContext, ACTIVATE_ORDER_CHANNEL, { orderId: this.recordId });
+                this.updateRecordView();
+            })
+            .catch(error => {
+                console.log(error);
+                toastWarning(this, `Order was not activated. Please contact your admin and share this error message: ${JSON.stringify(error, null, 2)}`);
+            })
+            .finally(() => {
+                this.showSpinner = false;
+            });
     }
 
     onHandleSort(event) {

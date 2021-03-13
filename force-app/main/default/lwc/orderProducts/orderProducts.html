@@ -2,6 +2,12 @@
     <lightning-layout>
         <lightning-layout-item size='12'>
             <lightning-card title="Order Products" icon-name="standard:orders">
+                <lightning-button
+                        label="Activate"
+                        onclick={handleActivate}
+                        slot="actions"
+                        disabled={isActivated}>
+                    </lightning-button>
                 <template if:true={products}>
                     <lightning-datatable
                             key-field="id"
@@ -14,6 +20,10 @@
                             onsort={onHandleSort}>
                     </lightning-datatable>
                 </template>
+                <div if:true={showSpinner}>
+                    <lightning-spinner alternative-text="Loading..." variant="brand">
+                    </lightning-spinner>
+                </div>
             </lightning-card>
         </lightning-layout-item>
     </lightning-layout>

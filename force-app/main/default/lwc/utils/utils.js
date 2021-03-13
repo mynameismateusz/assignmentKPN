@@ -1,3 +1,5 @@
+import { ShowToastEvent } from 'lightning/platformShowToastEvent'
+
 const sort = (event, data) => {
     const { fieldName: sortedBy, sortDirection } = event.detail;
     const cloneData = [...data];
@@ -26,4 +28,23 @@ const sortBy = (field, reverse, primer) => {
     };
 }
 
-export { sort }
+const toastSuccess = (cmp, msg) => {
+    const event = new ShowToastEvent({
+        title: 'Success',
+        message: msg,
+        variant: 'success'
+    });
+    cmp.dispatchEvent(event);
+}
+
+const toastWarning = (cmp, msg) => {
+    const event = new ShowToastEvent({
+        title: 'Something went wrong...',
+        message: msg,
+        variant: 'warning',
+        mode: 'sticky'
+    });
+    cmp.dispatchEvent(event);
+}
+
+export { sort, toastSuccess, toastWarning }
