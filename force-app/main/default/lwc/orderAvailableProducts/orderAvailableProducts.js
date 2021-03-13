@@ -1,5 +1,7 @@
 import { api, LightningElement, track, wire } from 'lwc';
 import { sort } from 'c/utils';
+import { publish, MessageContext } from 'lightning/messageService';
+import ADD_PRODUCT_CHANNEL from '@salesforce/messageChannel/Add_Order_Product__c';
 import getAvailableProducts from '@salesforce/apex/AvailableProductsController.getAvailableProducts';
 import getOrderProducts from '@salesforce/apex/AvailableProductsController.getOrderProducts';
 import addOrderItem from '@salesforce/apex/AvailableProductsController.addOrderItem';
@@ -37,9 +39,7 @@ export default class OrderAvailableProducts extends LightningElement {
             getOrderProducts({ orderId: this.recordId })
             .then((orderProds) => {
                 // Sorting available Products. If product was already added to the Order, it goes to the beginning of a list.
-                this.availableProducts = availableProducts.sort((toSort) => {
-                    orderProds.some(p => p.Product2Id === toSort.Product2Id) ? -1 : 1
-                });
+                this.availableProducts = availableProducts.sort((a) => (orderProds.some(p => p.Product2Id == a.Product2Id) ? -1 : 1));
             })
             .catch((error) => {
                 console.log(error);
@@ -48,6 +48,8 @@ export default class OrderAvailableProducts extends LightningElement {
             console.log(error)
         }
     }
+    @wire(MessageContext)
+    messageContext;
     columns = COLUMNS;
     showSpinner = false;
     defaultSortDirection = 'asc';
@@ -72,7 +74,8 @@ export default class OrderAvailableProducts extends LightningElement {
         const orderItem = this.createOrderItem(pricebookEntry, this.recordId);
         addOrderItem({ orderId: this.recordId, jsonOrderItem: orderItem})
             .then(result => {
-                console.log(result);
+                // Send message with newly added Order Product
+                publish(this.messageContext, ADD_PRODUCT_CHANNEL, { OrderItem: result });
             })
             .catch(error => {
                 console.log(error);
@@ -94,7 +97,7 @@ export default class OrderAvailableProducts extends LightningElement {
             Product2: {
                 Name: pricebookEntry.Name,
                 Id: pricebookEntry.Product2Id
-            }//limit amount of fields sent to apex
+            }
         };
         return orderItem;
     }

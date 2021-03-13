@@ -21,5 +21,9 @@
         <members>utils</members>
         <name>LightningComponentBundle</name>
     </types>
+    <types>
+        <members>Add_Order_Product</members>
+        <name>LightningMessageChannel</name>
+    </types>
     <version>51.0</version>
 </Package>
