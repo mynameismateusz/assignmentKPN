@@ -2,7 +2,7 @@ import { api, LightningElement, track, wire } from 'lwc';
 import { sort } from 'c/utils';
 import getAvailableProducts from '@salesforce/apex/AvailableProductsController.getAvailableProducts';
 import getOrderProducts from '@salesforce/apex/AvailableProductsController.getOrderProducts';
-import insertOrderItem from '@salesforce/apex/AvailableProductsController.insertOrderItem';
+import addOrderItem from '@salesforce/apex/AvailableProductsController.addOrderItem';
 
 const ADD_BUTTON_NAME = 'add_button';
 const COLUMNS = [
@@ -37,7 +37,9 @@ export default class OrderAvailableProducts extends LightningElement {
             getOrderProducts({ orderId: this.recordId })
             .then((orderProds) => {
                 // Sorting available Products. If product was already added to the Order, it goes to the beginning of a list.
-                this.availableProducts = availableProducts.sort((toSort) => orderProds.some(p => p.Product2Id === toSort.Product2Id) ? -1 : 1);
+                this.availableProducts = availableProducts.sort((toSort) => {
+                    orderProds.some(p => p.Product2Id === toSort.Product2Id) ? -1 : 1
+                });
             })
             .catch((error) => {
                 console.log(error);
@@ -54,7 +56,7 @@ export default class OrderAvailableProducts extends LightningElement {
 
     onHandleSort(event) {
         const res = sort(event, this.availableProducts);
-        this.products = res.data;
+        this.availableProducts = res.data;
         this.sortDirection = res.sortDirection;
         this.sortedBy = res.sortedBy;
     }
@@ -62,8 +64,22 @@ export default class OrderAvailableProducts extends LightningElement {
     handleRowAction(event) {
         this.showSpinner = true;
         if (event.detail.action.name === ADD_BUTTON_NAME) {
-            this.upsertOrderItem(this.createOrderItem(event.detail.row, this.recordId));
+            this.handleAddProduct(event.detail.row);
         }
+    }
+
+    handleAddProduct(pricebookEntry) {
+        const orderItem = this.createOrderItem(pricebookEntry, this.recordId);
+        addOrderItem({ orderId: this.recordId, jsonOrderItem: orderItem})
+            .then(result => {
+                console.log(result);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+            .finally(() => {
+                this.showSpinner = false;
+            });
     }
 
     createOrderItem(pricebookEntry, orderId) {
@@ -78,22 +94,8 @@ export default class OrderAvailableProducts extends LightningElement {
             Product2: {
                 Name: pricebookEntry.Name,
                 Id: pricebookEntry.Product2Id
-            }
+            }//limit amount of fields sent to apex
         };
         return orderItem;
-    }
-
-    upsertOrderItem(orderItem) {
-        console.log(orderItem);
-        insertOrderItem({ orderId: this.recordId, jsonOrderItem: orderItem})
-            .then(result => {
-                console.log(result);
-            })
-            .catch(error => {
-                console.log(error);
-            })
-            .finally(() => {
-                this.showSpinner = false;
-            });
     }
 }
