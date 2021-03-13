@@ -1,7 +1,7 @@
 public with sharing class OrderProductsController extends AuraController {
 
     @AuraEnabled(Cacheable=true)
-    public static List<OrderItem> getOrderProducts(Id orderId) {
+    public static List<OrderItem> getOrderProducts(String orderId) {
         validateId(orderId, Order.getSObjectType());
         try {
             return OrderProductsService.getOrderProductsByOrderId(orderId);

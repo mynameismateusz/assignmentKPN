@@ -4,6 +4,7 @@
         <members>AuraController</members>
         <members>AvailableProductsController</members>
         <members>AvailableProductsService</members>
+        <members>DMLService</members>
         <members>OrderItemSelector</members>
         <members>OrderProductsController</members>
         <members>OrderProductsService</members>
