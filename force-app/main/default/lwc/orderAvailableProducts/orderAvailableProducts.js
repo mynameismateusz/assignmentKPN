@@ -6,7 +6,6 @@ import ADD_PRODUCT_CHANNEL from '@salesforce/messageChannel/Add_Order_Product__c
 import ACTIVATE_ORDER_CHANNEL from '@salesforce/messageChannel/Activate_Order__c';
 import getAvailableProducts from '@salesforce/apex/AvailableProductsController.getAvailableProducts';
 import getOrderProducts from '@salesforce/apex/AvailableProductsController.getOrderProducts';
-import getOrderWithOrderProducts from '@salesforce/apex/AvailableProductsController.getOrderWithOrderProducts';
 import addOrderItem from '@salesforce/apex/AvailableProductsController.addOrderItem';
 import ORDER_STATUS from '@salesforce/schema/Order.Status';
 import ProductAdded from '@salesforce/label/c.ProductAdded';
@@ -43,12 +42,10 @@ export default class OrderAvailableProducts extends LightningElement {
     ({error, data}) {
         if (data) {
             const availableProducts = [...data];
-            getOrderWithOrderProducts({ orderId: this.recordId })
-            .then((order) => {
-                // If order is Active => disable Add Product buttons
-                if (order.Status === 'Activated') this.disableAddButtons();
+            getOrderProducts({ orderId: this.recordId })
+            .then((orderProducts) => {
                 // Sorting available Products. If product was already added to the Order, it goes to the beginning of a list.
-                this.availableProducts = availableProducts.sort((a) => (order.OrderItems.some(p => p.Product2Id == a.Product2Id) ? -1 : 1));
+                this.availableProducts = availableProducts.sort((a) => (orderProducts.some(p => p.Product2Id == a.Product2Id) ? -1 : 1));
             })
             .catch((error) => {
                 console.log(error);
@@ -58,7 +55,15 @@ export default class OrderAvailableProducts extends LightningElement {
         }
     }
     @wire(getRecord, { recordId: '$recordId', fields: [], optionalFields: [ORDER_STATUS] })
-    order;
+    order
+    ({error, data}) {
+        if (data) {
+            // If order is Active => disable Add Product buttons
+            this.updateAddButtons(this.isActivated(data));
+        } else if (error) {
+            console.log(error);
+        }
+    }
     @wire(MessageContext)
     messageContext;
     columns = COLUMNS;
@@ -69,6 +74,10 @@ export default class OrderAvailableProducts extends LightningElement {
 
     connectedCallback() {
         this.subscribeToMessageChannel();
+    }
+
+    isActivated(order) {
+        return getFieldValue(order, ORDER_STATUS) === 'Activated' ? true : false;
     }
 
     /**
@@ -88,17 +97,17 @@ export default class OrderAvailableProducts extends LightningElement {
      */
     handleActivateOrderMsg(orderId) {
         if (this.recordId === orderId) {
-            this.disableAddButtons();
-            this.columns = [...this.columns];
+            this.updateAddButtons(true);
         }
     }
 
     /**
-     * Disable 'Add' buttons when Order is activated
+     * Disable or Enable 'Add' buttons when Order is activated/deactivated
      * It's done by columns search in case the columns order is changed in the future
      */
-    disableAddButtons() {
-        this.columns.find(c => c.type === 'button' && c.typeAttributes.name === ADD_BUTTON_NAME).typeAttributes.disabled = true;
+     updateAddButtons(disable) {
+        this.columns.find(c => c.type === 'button' && c.typeAttributes.name === ADD_BUTTON_NAME).typeAttributes.disabled = disable;
+        this.columns = [...this.columns];
     }
 
     onHandleSort(event) {
