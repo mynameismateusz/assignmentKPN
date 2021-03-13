@@ -29,7 +29,7 @@
       <members>OrderNotActivatedErr</members>
       <members>ProductAdded</members>
       <members>ProductNotAddedErr</members>
-      <name>CustomLabels</name>
+      <name>CustomLabel</name>
     </types>
     <types>
         <members>OrderRecordPage</members>

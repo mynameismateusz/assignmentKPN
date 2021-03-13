@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>ContactAdminErr</fullName>
+        <categories>Id,error,exception,aura,lwc</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Contact Admin Error Text</shortDescription>
+        <value>Please contact your admin and share this error message:</value>
+    </labels>
+    <labels>
+        <fullName>IdEmptyErr</fullName>
+        <categories>Id,error,exception,aura,lwc</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error for empty Id</shortDescription>
+        <value>{0} Id is empty</value>
+    </labels>
+    <labels>
+        <fullName>IdIncorrectTypeErr</fullName>
+        <categories>Id,error,exception,aura,lwc</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error for incorrect Id type</shortDescription>
+        <value>Provided Id is of an incorrect type</value>
+    </labels>
+    <labels>
+        <fullName>NotAnIdErr</fullName>
+        <categories>Id,error,exception,aura,lwc</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error for incorrect Id</shortDescription>
+        <value>Provided string is not an Id</value>
+    </labels>
+    <labels>
+        <fullName>ObjectIncorrectErr</fullName>
+        <categories>Id,error,exception,aura,lwc,object</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error for incorrect Object</shortDescription>
+        <value>Provided {0} is incorrect</value>
+    </labels>
+    <labels>
+        <fullName>OrderActivated</fullName>
+        <categories>Id,error,exception,aura,lwc,order</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Order Activated Success</shortDescription>
+        <value>Order was activated successfully!</value>
+    </labels>
+    <labels>
+        <fullName>OrderNotActivatedErr</fullName>
+        <categories>Id,error,exception,aura,lwc,order</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Order Not Activated Error</shortDescription>
+        <value>Order was not activated.</value>
+    </labels>
+    <labels>
+        <fullName>ProductAdded</fullName>
+        <categories>Id,error,exception,aura,lwc,product</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Product Added Success</shortDescription>
+        <value>Product was added successfully!</value>
+    </labels>
+    <labels>
+        <fullName>ProductNotAddedErr</fullName>
+        <categories>Id,error,exception,aura,lwc,product</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error for not added Product</shortDescription>
+        <value>Product was not added.</value>
+    </labels>
+</CustomLabels>
