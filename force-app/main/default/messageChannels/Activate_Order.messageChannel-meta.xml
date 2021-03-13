@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
-    <masterLabel>ActivateOrder</masterLabel>
-    <isExposed>true</isExposed>
     <description>Message Channel to notify about Order Activation</description>
+    <isExposed>true</isExposed>
     <lightningMessageFields>
-        <fieldName>orderId</fieldName>
         <description>Id of an activated Order</description>
+        <fieldName>orderId</fieldName>
     </lightningMessageFields>
+    <masterLabel>ActivateOrder</masterLabel>
 </LightningMessageChannel>
