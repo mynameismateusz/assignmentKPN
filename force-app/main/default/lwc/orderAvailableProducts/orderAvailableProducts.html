@@ -1,25 +1,44 @@
 <template>
-    <lightning-layout>
-        <lightning-layout-item size='12'>
-            <lightning-card title="Available Products" icon-name="standard:checkout">
-                <template if:true={availableProducts}>
-                    <lightning-datatable class="slds-var-p-horizontal_x-small"
-                            key-field="id"
-                            columns={columns}
-                            data={availableProducts}
-                            hide-checkbox-column
-                            default-sort-direction={defaultSortDirection}
-                            sorted-direction={sortDirection}
-                            sorted-by={sortedBy}
-                            onsort={onHandleSort}
-                            onrowaction={handleRowAction}>
-                    </lightning-datatable>
-                </template>
-                <div if:true={showSpinner}>
-                    <lightning-spinner alternative-text="Loading..." variant="brand">
-                    </lightning-spinner>
-                </div>
-            </lightning-card>
-        </lightning-layout-item>
-    </lightning-layout>
+    <article class="slds-card slds-card_boundary">
+        <div class="slds-page-header">
+            <header class="slds-media slds-media_center">
+            <div class="slds-media__figure">
+                <lightning-icon
+                    icon-name="standard:checkout"
+                    alternative-text="Available Products"
+                    size="small"
+                    title="Available Products">
+                </lightning-icon>
+            </div>
+            <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                    Available Products
+                </h2>
+            </div>
+            </header>
+        </div>
+        <div>
+            <template if:true={availableProducts}>
+                <lightning-datatable
+                    key-field="id"
+                    columns={columns}
+                    data={availableProducts}
+                    hide-checkbox-column
+                    default-sort-direction={defaultSortDirection}
+                    sorted-direction={sortDirection}
+                    sorted-by={sortedBy}
+                    onsort={onHandleSort}
+                    column-widths-mode="auto"
+                    resize-column-disabled="true"
+                    onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </template>
+        </div>
+        <div if:true={showSpinner}>
+            <lightning-spinner
+                alternative-text="Loading..."
+                variant="brand">
+            </lightning-spinner>
+        </div>
+    </article>
 </template>

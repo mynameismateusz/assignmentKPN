@@ -1,30 +1,48 @@
 <template>
-    <lightning-layout>
-        <lightning-layout-item size='12'>
-            <lightning-card title="Order Products" icon-name="standard:orders">
-                <lightning-button
-                        label="Activate"
-                        onclick={handleActivate}
-                        slot="actions"
-                        disabled={isActivated}>
-                    </lightning-button>
-                <template if:true={products}>
-                    <lightning-datatable
-                            key-field="id"
-                            columns={columns}
-                            data={products}
-                            hide-checkbox-column
-                            default-sort-direction={defaultSortDirection}
-                            sorted-direction={sortDirection}
-                            sorted-by={sortedBy}
-                            onsort={onHandleSort}>
-                    </lightning-datatable>
-                </template>
-                <div if:true={showSpinner}>
-                    <lightning-spinner alternative-text="Loading..." variant="brand">
-                    </lightning-spinner>
-                </div>
-            </lightning-card>
-        </lightning-layout-item>
-    </lightning-layout>
+    <article class="slds-card slds-card_boundary">
+        <div class="slds-page-header">
+            <header class="slds-media slds-media_center">
+            <div class="slds-media__figure">
+                <lightning-icon
+                    icon-name="standard:orders"
+                    alternative-text="Order Products"
+                    size="small"
+                    title="Order Products">
+                </lightning-icon>
+            </div>
+            <div class="slds-media__body">
+                <h2 class="slds-card__header-title">
+                    Order Products
+                </h2>
+            </div>
+            <lightning-button
+                label="Activate"
+                onclick={handleActivate}
+                slot="actions"
+                disabled={isActivated}>
+            </lightning-button>
+            </header>
+        </div>
+        <div>
+            <template if:true={products}>
+                <lightning-datatable
+                    key-field="id"
+                    columns={columns}
+                    data={products}
+                    hide-checkbox-column
+                    default-sort-direction={defaultSortDirection}
+                    sorted-direction={sortDirection}
+                    sorted-by={sortedBy}
+                    resize-column-disabled="true"
+                    onsort={onHandleSort}>
+                </lightning-datatable>
+            </template>
+        </div>
+        <div if:true={showSpinner}>
+            <lightning-spinner
+                alternative-text="Loading..."
+                variant="brand">
+            </lightning-spinner>
+        </div>
+    </article>
 </template>
