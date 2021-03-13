@@ -44,10 +44,6 @@ public with sharing class AvailableProductsController extends AuraController {
      */
     @AuraEnabled
     public static OrderItem addOrderItem(String orderId, Map<String, Object> jsonOrderItem) {
-        for (String key : jsonOrderItem.keySet()) {
-            System.debug(key);
-            System.debug(jsonOrderItem.get(key));
-        }
         validateId(orderId, Order.getSObjectType());
         OrderItem item = (OrderItem) deserializeSObjectJSON(jsonOrderItem, OrderItem.SObjectType);
 

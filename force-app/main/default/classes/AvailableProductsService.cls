@@ -3,12 +3,14 @@ public with sharing class AvailableProductsService {
     /**
      * Get active PricebookEntries, related to Order's Pricebook
      * @param {Id} recordId: Id of an Order
-     * @return {List<PricebookEntry>} - null if Order doesn't have a Pricebook
+     * @return {List<PricebookEntry>} - empty if Order doesn't have a Pricebook
      */
     public static List<PricebookEntry> getAvailableProducts(Id orderId) {
         Map<Id, Order> orders = new Map<Id, Order>(OrderSelector.getOrdersByIds(new Set<Id>{orderId}));
         Id pricebookId = orders.get(orderId)?.Pricebook2Id;
-        if (pricebookId == null) return null;
+        if (pricebookId == null) {
+            return new List<PricebookEntry>();
+        }
         return PricebookEntrySelector.getPricebookEntriesByPricebookId(pricebookId);
     }
 

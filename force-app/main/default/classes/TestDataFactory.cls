@@ -1,8 +1,8 @@
 @IsTest
 public class TestDataFactory {
 
-    private static String TEST_NAME = 'TestName';
     private static Integer TEST_PRICE = 20;
+    private static Integer TEST_QUANTITY = 1;
     private static String ORDER_DEFAULT_STATUS = 'Draft';
 
     public static List<Product2> insertProducts(Integer amount) {
@@ -15,7 +15,7 @@ public class TestDataFactory {
         List<Product2> products = new List<Product2>();
         for (Integer i = 0; i < amount; i++) {
             products.add(new Product2(
-                Name = TEST_NAME + i,
+                Name = generateRandomString(12) + i,
                 isActive = true
             ));
         }
@@ -41,7 +41,7 @@ public class TestDataFactory {
         List<Pricebook2> pricebooks = new List<Pricebook2>();
         for (Integer i = 0; i < amount; i++) {
             pricebooks.add(new Pricebook2(
-                Name = TEST_NAME + i,
+                Name = generateRandomString(12) + i,
                 isActive = true
             ));
         }
@@ -77,7 +77,7 @@ public class TestDataFactory {
         List<Account> accounts = new List<Account>();
         for (Integer i = 0; i < amount; i++) {
             accounts.add(new Account(
-                Name = TEST_NAME
+                Name = generateRandomString(12)
             ));
         }
         return accounts;
@@ -93,7 +93,7 @@ public class TestDataFactory {
         List<Order> orders = new List<Order>();
         for (Integer i = 0; i < amount; i++) {
             orders.add(new Order(
-                Name = TEST_NAME,
+                Name = generateRandomString(12),
                 AccountId = accountId,
                 Pricebook2Id = pricebookId,
                 Status = ORDER_DEFAULT_STATUS,
@@ -103,21 +103,34 @@ public class TestDataFactory {
         return orders;
     }
 
-    public static List<OrderItem> insertOrderItems(Integer amount, Id orderId, Id product2Id) {
-        List<OrderItem> orderItems = createOrderItems(amount, orderId, product2Id);
+    public static List<OrderItem> insertOrderItems(Integer amount, Id orderId, PricebookEntry entry) {
+        List<OrderItem> orderItems = createOrderItems(amount, orderId, entry);
         insert orderItems;
         return orderItems;
     }
 
-    public static List<OrderItem> createOrderItems(Integer amount, Id orderId, Id product2Id) {
+    public static List<OrderItem> createOrderItems(Integer amount, Id orderId, PricebookEntry entry) {
         List<OrderItem> orderItems = new List<OrderItem>();
         for (Integer i = 0; i < amount; i++) {
             orderItems.add(new OrderItem(
                 OrderId = orderId,
-                Product2Id = product2Id
+                Product2Id = entry.Product2Id,
+                PricebookEntryId = entry.Id,
+                UnitPrice = TEST_PRICE,
+                Quantity = TEST_QUANTITY
             ));
         }
         return orderItems;
+    }
+
+    private static String generateRandomString(Integer len) {
+        final String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
+        String randStr = '';
+        while (randStr.length() < len) {
+           Integer idx = Math.mod(Math.abs(Crypto.getRandomInteger()), chars.length());
+           randStr += chars.substring(idx, idx+1);
+        }
+        return randStr;
     }
 
 }
