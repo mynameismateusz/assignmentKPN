@@ -39,7 +39,7 @@
                 </div>
             </template>
         </div>
-        <div if:false={hasProducts} class="slds-align_absolute-center slds-grid slds-grid_vertical">
+        <div if:true={noProductsFound} class="slds-align_absolute-center slds-grid slds-grid_vertical">
             <div class="slds-col slds-var-p-vertical_medium">
                 <div class="slds-media__figure">
                     <lightning-icon

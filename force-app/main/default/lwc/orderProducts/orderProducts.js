@@ -76,8 +76,9 @@ export default class OrderProducts extends LightningElement {
         return this.products ? `(${this.products.length})` : '';
     }
 
+    /** Used to steer datatable visibility. Returns true if there is at least one Product to display. */
     get hasProducts() {
-        return this.products?.length > 0;
+        return this.products ? this.products.length > 0 : false;
     }
 
     /**

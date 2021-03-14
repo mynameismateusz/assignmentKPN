@@ -117,8 +117,14 @@ export default class OrderAvailableProducts extends LightningElement {
         return this.totalNumberOfRows ? `(${this.totalNumberOfRows})` : '';
     }
 
+    /** Used to steer datatable visibility. Returns true if there is at least one Product to display. */
     get hasProducts() {
-        return this.availableProducts?.length > 0;
+        return this.availableProducts ? this.availableProducts.length > 0 : false;
+    }
+
+    /** Used to display 'products not found'. Returns true if there is there are no Products to display. */
+    get noProductsFound() {
+        return this.availableProducts ? this.availableProducts.length === 0 : false;
     }
 
     /**
