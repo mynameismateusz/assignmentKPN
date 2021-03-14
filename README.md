@@ -66,22 +66,23 @@
 
 1. If you want to verify Order Confirmation requests, you can do it [here](https://godis-orders.requestcatcher.com/).
 
-1. What's **GODIS**? Godis means 'Candy' in Swedish! ![Swedish Fish Cany](https://www.pngkey.com/png/full/313-3133225_swedish-fish-soft-chewy-candy-2oz-swedish-fish.png)
+1. What's **GODIS**? Godis means 'Candy' in Swedish!
+<img src="https://www.pngkey.com/png/full/313-3133225_swedish-fish-soft-chewy-candy-2oz-swedish-fish.png" width="350" title="Swedish Fish Candy">
 
 ## My own thoughts
 
-### Relation field used in lightning-datatable
+#### Relation field used in lightning-datatable
 
 As it is described [here](https://trailblazer.salesforce.com/ideaView?id=0873A000000lLXYQA2), lightning-datatable does not support relation fields. I wanted to display OrderItem name from Product2.Name, but it wouldn't have worked. So I was considering the following:
 * Creating an Apex Class with @AuraEnable fields to serve as a wrapper, where I could flatten the Product name.It would have worked, but I wasn't super convinced.
 * Simply create a formula field. Easy, but I was like - meh.
 * Iterating over the collection in js and assigning the Product2.Name to Name. It's not too bad, but it's also not very performant and it requires making a deep copy of the array because data returned from Apex is immutable. It isn't ideal, but I also don't expect too many items to be pulled from SF at a single time, because of the lazy loading, so I decided to go with it.
 
-### Using Apex for queries
+#### Using Apex for queries
 
 The requirement is to use Apex for DML and data querying. While I understand that it's done this way, so there's actually a chance to show off Apex skills, I decided to use native getRecord() function to fetch Order. There's is one big benefit of doing it this way and it's the fact, that if user changes the Order Status in the standard detail edit page, the components will notice it and update accordingly.
 
-### SObject Selectors
+#### SObject Selectors
 
 While I think that using fflib in such a small project would be an overkill - I still wanted to separate SOQL from the service business logic.
 
