@@ -15,7 +15,7 @@ private class PricebookEntrySelector_Test {
 
         //WHEN
         Test.startTest();
-        final List<PricebookEntry> ENTRIES = PricebookEntrySelector.getPricebookEntriesByPricebookId(PRICEBOOK.Id);
+        final List<PricebookEntry> ENTRIES = PricebookEntrySelector.getPricebookEntriesByPricebookId(PRICEBOOK.Id, PRICEBOOK.PricebookEntries.size(), 0);
         Test.stopTest();
 
         System.assertEquals(PRICEBOOK.PricebookEntries.size(), ENTRIES.size(), 'Amount of returned entries should match');
@@ -28,7 +28,7 @@ private class PricebookEntrySelector_Test {
 
         //WHEN
         Test.startTest();
-        final List<PricebookEntry> ENTRIES = PricebookEntrySelector.getPricebookEntriesByPricebookId(NEW_PRICEBOOK.Id);
+        final List<PricebookEntry> ENTRIES = PricebookEntrySelector.getPricebookEntriesByPricebookId(NEW_PRICEBOOK.Id, 1, 0);
         Test.stopTest();
 
         System.assertEquals(true, ENTRIES.isEmpty(), 'No entries should be returned');

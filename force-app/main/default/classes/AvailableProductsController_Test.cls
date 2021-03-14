@@ -14,13 +14,6 @@ private class AvailableProductsController_Test {
     static void getAvailableProducts_POS() {
         //GIVEN
         Order o = [SELECT Id, Pricebook2Id FROM Order LIMIT 1];
-
-        //WHEN
-        Test.startTest();
-        List<PricebookEntry> available = AvailableProductsController.getAvailableProducts(o.Id);
-        Test.stopTest();
-
-        //THEN
         List<PricebookEntry> entries = [
             SELECT Id
             FROM PricebookEntry
@@ -28,6 +21,12 @@ private class AvailableProductsController_Test {
             AND IsActive = TRUE
         ];
 
+        //WHEN
+        Test.startTest();
+        List<PricebookEntry> available = AvailableProductsController.getAvailableProducts(o.Id, entries.size(), 0);
+        Test.stopTest();
+
+        //THEN
         System.assertEquals(entries.size(), available.size(), 'Amount of returned available products should match');
     }
 
@@ -40,7 +39,7 @@ private class AvailableProductsController_Test {
 
         //WHEN
         Test.startTest();
-        List<PricebookEntry> available = AvailableProductsController.getAvailableProducts(o.Id);
+        List<PricebookEntry> available = AvailableProductsController.getAvailableProducts(o.Id, 1, 0);
         Test.stopTest();
 
         //THEN
