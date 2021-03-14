@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Used to store external system request config</description>
+    <label>Interface</label>
+    <pluralLabel>Interfaces</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>
