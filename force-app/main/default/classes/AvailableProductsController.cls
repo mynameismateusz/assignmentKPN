@@ -33,6 +33,12 @@ public with sharing class AvailableProductsController extends AuraController {
         }
     }
 
+    /**
+     * Get total amount of active PricebookEntries, related to Order's Pricebook
+     * @param {String} orderId
+     * @return {Integer} amount of PricebookEntries
+     * @throws {AuraHandledException}
+     */
     @AuraEnabled(Cacheable=true)
     public static Integer getOrderAvailableProductsCount(String orderId) {
         validateId(orderId, Order.getSObjectType());
@@ -45,8 +51,6 @@ public with sharing class AvailableProductsController extends AuraController {
 
     /**
      * Add an Order Product.
-     * If Order already has given Product, then quantity of an existing Order Product is incremented by one.
-     * If Order does not have such Product yet, it simply inserts a new OrderItem.
      * @param {String} orderId: Id of an Order
      * @param {Map<String, Object>} jsonOrderItem: OrderItem to insert
      * @return {OrderItem} Upserted item

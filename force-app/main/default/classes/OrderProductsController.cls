@@ -1,5 +1,11 @@
 public with sharing class OrderProductsController extends AuraController {
 
+    /**
+     * Get Order Products related to an Order
+     * @param {Id} recordId: Id of an Order
+     * @return {List<OrderItem>} order products
+     * @throws {AuraHandledException}
+     */
     @AuraEnabled(Cacheable=true)
     public static List<OrderItem> getOrderProducts(String orderId) {
         validateId(orderId, Order.getSObjectType());
@@ -10,6 +16,12 @@ public with sharing class OrderProductsController extends AuraController {
         }
     }
 
+    /**
+     * Activate an Order
+     * @param {Id} recordId: Id of an Order
+     * @return {Order} Activated Order
+     * @throws {AuraHandledException}
+     */
     @AuraEnabled
     public static Order activateOrder(String orderId) {
         validateId(orderId, Order.getSObjectType());

@@ -14,6 +14,11 @@ public with sharing class AvailableProductsService {
         return PricebookEntrySelector.getPricebookEntriesByPricebookId(pricebookId, amount, offset);
     }
 
+    /**
+     * Get total amount of active PricebookEntries, related to Order's Pricebook
+     * @param {String} orderId
+     * @return {Integer} amount of PricebookEntries
+     */
     public static Integer getOrderAvailableProductsCount(Id orderId) {
         Map<Id, Order> orders = new Map<Id, Order>(OrderSelector.getOrdersByIds(new Set<Id>{orderId}));
         Id pricebookId = orders.get(orderId)?.Pricebook2Id;
