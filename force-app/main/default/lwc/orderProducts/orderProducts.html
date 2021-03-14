@@ -24,7 +24,7 @@
             </header>
         </div>
         <div>
-            <template if:true={products}>
+            <template if:true={hasProducts}>
                 <lightning-datatable
                     key-field="id"
                     columns={columns}

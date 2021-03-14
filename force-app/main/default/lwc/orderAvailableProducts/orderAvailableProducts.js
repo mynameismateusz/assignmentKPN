@@ -117,6 +117,10 @@ export default class OrderAvailableProducts extends LightningElement {
         return this.totalNumberOfRows ? `(${this.totalNumberOfRows})` : '';
     }
 
+    get hasProducts() {
+        return this.availableProducts?.length > 0;
+    }
+
     /**
      * Fetch more available products and add them to the end of the list.
      * Invoked by scrolling to the bottom of the products list.

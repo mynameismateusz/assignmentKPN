@@ -76,6 +76,10 @@ export default class OrderProducts extends LightningElement {
         return this.products ? `(${this.products.length})` : '';
     }
 
+    get hasProducts() {
+        return this.products?.length > 0;
+    }
+
     /**
      * Used to refresh the wired Order record.
      * Since no other fields than Id are provided, no actual change is done in the DB

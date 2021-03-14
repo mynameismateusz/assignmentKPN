@@ -1,1 +1,5 @@
 @import 'c/commonStyles';
+
+.noProductsText {
+    color: var(--sds-c-icon-color-foreground-default, var(--lwc-colorTextIconDefault,rgb(112, 110, 107)));
+}

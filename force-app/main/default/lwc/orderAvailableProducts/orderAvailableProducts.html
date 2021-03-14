@@ -18,7 +18,7 @@
             </header>
         </div>
         <div>
-            <template if:true={availableProducts}>
+            <template if:true={hasProducts}>
                 <div style="height: 500px">
                     <lightning-datatable
                         key-field="id"
@@ -38,6 +38,25 @@
                     </lightning-datatable>
                 </div>
             </template>
+        </div>
+        <div if:false={hasProducts} class="slds-align_absolute-center slds-grid slds-grid_vertical">
+            <div class="slds-col slds-var-p-vertical_medium">
+                <div class="slds-media__figure">
+                    <lightning-icon
+                        icon-name="utility:einstein"
+                        alternative-text="No products found"
+                        size="large"
+                        title="No Products Found">
+                    </lightning-icon>
+                </div>
+            </div>
+            <div class="slds-col slds-var-p-vertical_medium">
+                <div class="slds-media__body">
+                    <h2 class="slds-text-heading_medium noProductsText">
+                        We can't find any product available for this Order
+                    </h2>
+                </div>
+            </div>
         </div>
         <div if:true={showSpinner}>
             <lightning-spinner

@@ -74,7 +74,7 @@
 #### Relation field used in lightning-datatable
 
 As it is described [here](https://trailblazer.salesforce.com/ideaView?id=0873A000000lLXYQA2), lightning-datatable does not support relation fields. I wanted to display OrderItem name from Product2.Name, but it wouldn't have worked. So I was considering the following:
-* Creating an Apex Class with @AuraEnable fields to serve as a wrapper, where I could flatten the Product name.It would have worked, but I wasn't super convinced.
+* Creating an Apex Class with @AuraEnable fields to serve as a wrapper, where I could flatten the Product2.Name. It would have worked, but I wasn't super convinced.
 * Simply create a formula field. Easy, but I was like - meh.
 * Iterating over the collection in js and assigning the Product2.Name to Name. It's not too bad, but it's also not very performant and it requires making a deep copy of the array because data returned from Apex is immutable. It isn't ideal, but I also don't expect too many items to be pulled from SF at a single time, because of the lazy loading, so I decided to go with it.
 
