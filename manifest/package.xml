@@ -32,9 +32,17 @@
       <name>CustomLabel</name>
     </types>
     <types>
+        <members>Interface.GODIS_Confirm_Order</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
         <members>OrderRecordPage</members>
         <name>FlexiPage</name>
     </types>
+	<types>
+		<members>GODISOrderSystem</members>
+		<name>NamedCredential</name>
+	</types>
     <types>
         <members>orderAvailableProducts</members>
         <members>orderProducts</members>
@@ -46,5 +54,9 @@
         <members>Add_Order_Product</members>
         <name>LightningMessageChannel</name>
     </types>
+	<types>
+		<members>GODISOrderSystem</members>
+		<name>RemoteSiteSetting</name>
+	</types>
     <version>51.0</version>
 </Package>

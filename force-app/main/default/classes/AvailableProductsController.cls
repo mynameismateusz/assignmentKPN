@@ -48,7 +48,7 @@ public with sharing class AvailableProductsController extends AuraController {
         OrderItem item = (OrderItem) deserializeSObjectJSON(jsonOrderItem, OrderItem.SObjectType);
 
         DMLService.DMLResult res = AvailableProductsService.addOrderItem(orderId, item);
-        if (!res.getErrors().isEmpty()) throw new AuraHandledException('Product was not added successfully');
+        if (!res.getErrors().isEmpty()) throw new AuraHandledException(Label.ProductNotAddedErr);
         return (OrderItem) res.getRecord();
     }
 }

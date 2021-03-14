@@ -116,7 +116,7 @@ export default class OrderProducts extends LightningElement {
             })
             .catch(error => {
                 console.log(error);
-                toastWarning(this, `${OrderNotActivatedErr} ${ContactAdminErr} ${JSON.stringify(error, null, 2)}`);
+                toastWarning(this, `${OrderNotActivatedErr} ${ContactAdminErr} ${error.body.message}`);
             })
             .finally(() => {
                 this.showSpinner = false;

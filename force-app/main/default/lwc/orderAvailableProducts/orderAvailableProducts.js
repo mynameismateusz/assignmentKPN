@@ -137,7 +137,7 @@ export default class OrderAvailableProducts extends LightningElement {
                 publish(this.messageContext, ADD_PRODUCT_CHANNEL, { OrderItem: result });
             })
             .catch(error => {
-                toastWarning(this, `${ProductNotAddedErr} ${ContactAdminErr} ${JSON.stringify(error, null, 2)}`);
+                toastWarning(this, `${ProductNotAddedErr} ${ContactAdminErr} ${error.body.message}`);
                 console.log(error);
             })
             .finally(() => {
