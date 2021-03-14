@@ -1,0 +1,26 @@
+[
+    {
+        "sobject": "Account",
+        "saveRefs": true,
+        "resolveRefs": false,
+        "files": [
+            "export-demo-Accounts.json"
+        ]
+    },
+    {
+        "sobject": "Product2",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": [
+            "export-demo-Product2s.json"
+        ]
+    },
+    {
+        "sobject": "Order",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": [
+            "export-demo-Orders.json"
+        ]
+    }
+]

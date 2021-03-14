@@ -32,6 +32,7 @@
         <members>IdEmptyErr</members>
         <members>IdIncorrectTypeErr</members>
         <members>NotAnIdErr</members>
+        <members>OrderConfirmationFailErr</members>
         <members>ObjectIncorrectErr</members>
         <members>OrderActivated</members>
         <members>OrderNotActivatedErr</members>

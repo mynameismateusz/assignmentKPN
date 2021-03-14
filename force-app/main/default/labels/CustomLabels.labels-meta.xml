@@ -4,7 +4,7 @@
         <fullName>ContactAdminErr</fullName>
         <categories>Id,error,exception,aura,lwc</categories>
         <language>en_US</language>
-        <protected>true</protected>
+        <protected>false</protected>
         <shortDescription>Contact Admin Error Text</shortDescription>
         <value>Please contact your admin and share this error message:</value>
     </labels>
@@ -47,6 +47,14 @@
         <protected>false</protected>
         <shortDescription>Order Activated Success</shortDescription>
         <value>Order was activated successfully!</value>
+    </labels>
+    <labels>
+        <fullName>OrderConfirmationFailErr</fullName>
+        <categories>Id,error,exception,aura,lwc,order,godis,confirmation,callout</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Error for failed confirmation in GODIS</shortDescription>
+        <value>Order couldn&apos;t be confirmed in the external system</value>
     </labels>
     <labels>
         <fullName>OrderNotActivatedErr</fullName>
