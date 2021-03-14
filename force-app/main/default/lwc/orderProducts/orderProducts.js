@@ -39,18 +39,6 @@ const COLUMNS = [
 export default class OrderProducts extends LightningElement {
     @api recordId;
     @track products;
-    @wire(getOrderProducts, { orderId: '$recordId' })
-    wiredOrderProducts
-    ({error, data}) {
-        if (data) {
-            // Do deep copy of array objects and add the 'Name' property
-            this.products = data.map(p => Object.assign({}, p, { Name: p.Product2.Name }));
-        } else if (error) {
-            console.log(error)
-        }
-    }
-    @wire(getRecord, { recordId: '$recordId', fields: [], optionalFields: [ORDER_STATUS] })
-    order;
     @wire(MessageContext)
     messageContext;
     columns = COLUMNS;
@@ -63,22 +51,38 @@ export default class OrderProducts extends LightningElement {
         this.subscribeToMessageChannel();
     }
 
+    /** Fetch OrderItems from Apex to display them in the datatable */
+    @wire(getOrderProducts, { orderId: '$recordId' })
+    wiredOrderProducts
+    ({error, data}) {
+        if (data) {
+            // Do deep copy of array objects and add the 'Name' property
+            this.products = data.map(p => Object.assign({}, p, { Name: p.Product2.Name }));
+        } else if (error) {
+            console.log(error)
+        }
+    }
+    /** Order record is queried to verify its Status and steer 'Activate' button availability */
+    @wire(getRecord, { recordId: '$recordId', fields: [], optionalFields: [ORDER_STATUS] })
+    order;
+
+    /** Verifies Order status. 'Activate' button is disabled if Order is already Active */
     get isActivated() {
-        const orderStatus = getFieldValue(this.order.data, ORDER_STATUS);
-        return orderStatus === 'Activated' ? true : false;
+        return getFieldValue(this.order.data, ORDER_STATUS) === 'Activated' ? true : false;
+    }
+
+    /** Returns amount of Order Products */
+    get productsAmountLabel() {
+        return this.products ? `(${this.products.length})` : '';
     }
 
     /**
      * Used to refresh the wired Order record.
      * Since no other fields than Id are provided, no actual change is done in the DB
      */
-    updateRecordView() {
-        updateRecord({fields: { Id: this.recordId }});
-    }
+    updateRecordView = () => updateRecord({fields: { Id: this.recordId }});
 
-    /**
-     * Subscribe to the Add Product to receive events
-     */
+    /** Subscribe to the Add Product to receive events */
     subscribeToMessageChannel() {
         this.subscription = subscribe(
             this.messageContext,
@@ -90,7 +94,7 @@ export default class OrderProducts extends LightningElement {
     /**
      * Handle message and add new Product to the list
      * Increases Quantity if Product was already added to the Order, otherwise adds a new entry
-     * @param {any} newItem New Order Item
+     * @param {OrderItem} newItem New Order Item
      */
     handleAddProductMsg(newItem) {
         let existingItem = this.products.find(p => p.Id === newItem.Id);
@@ -104,25 +108,41 @@ export default class OrderProducts extends LightningElement {
         }
     }
 
+    /** Activate Order on 'Activate' button click */
     handleActivate() {
         this.showSpinner = true;
         activateOrder({ orderId: this.recordId })
-            .then(result => {
-                toastSuccess(this, `${OrderActivated}`);
-                // Send message with newly activated Order Id
-                publish(this.messageContext, ACTIVATE_ORDER_CHANNEL, { orderId: result.Id });
-                // Update wired Order to refresh the Status
-                this.updateRecordView();
-            })
-            .catch(error => {
-                console.log(error);
-                toastWarning(this, `${OrderNotActivatedErr} ${ContactAdminErr} ${error.body.message}`);
-            })
-            .finally(() => {
-                this.showSpinner = false;
-            });
+            .then(result => this.handleOrderActivationSuccess(result))
+            .catch(error => (this.handleOrderActivationFail(error)))
+            .finally(() => this.showSpinner = false)
     }
 
+    /**
+     * Send message with Id of activated Order and refresh the wired record
+     * @param {Order} order
+     */
+    handleOrderActivationSuccess(order) {
+        toastSuccess(this, `${OrderActivated}`);
+        // Send message with newly activated Order Id
+        publish(this.messageContext, ACTIVATE_ORDER_CHANNEL, { orderId: order.Id });
+        // Update wired Order to refresh the Status
+        this.updateRecordView();
+    }
+
+    /**
+     * Display toast with error message.
+     * Displays message from Apex if possible.
+     * @param {any} err
+     */
+    handleOrderActivationFail(err) {
+        const errMsg = err.body.message ? err.body.message : err;
+        toastWarning(this, `${OrderNotActivatedErr} ${ContactAdminErr} ${errMsg}`);
+    }
+
+    /**
+     * Sort columns on table header click
+     * @param {any} event
+     */
     onHandleSort(event) {
         const res = sort(event, this.products);
         this.products = res.data;

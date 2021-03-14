@@ -1,0 +1,4 @@
+.card-header {
+    border-bottom: var(--lwc-borderWidthThin, 1px) solid var(--c-cardColorBorder, rgb(221, 219, 218));
+    border-radius: var(--c-spacingNone, 0);
+}

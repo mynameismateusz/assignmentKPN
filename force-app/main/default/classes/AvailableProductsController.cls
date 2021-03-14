@@ -7,10 +7,10 @@ public with sharing class AvailableProductsController extends AuraController {
      * @throws {AuraHandledException}
      */
     @AuraEnabled(Cacheable=true)
-    public static List<PricebookEntry> getAvailableProducts(String orderId) {
+    public static List<PricebookEntry> getAvailableProducts(String orderId, Integer amount, Integer offset) {
         validateId(orderId, Order.getSObjectType());
         try {
-            return AvailableProductsService.getAvailableProducts(orderId);
+            return AvailableProductsService.getOrderAvailableProducts(orderId, amount, offset);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -28,6 +28,16 @@ public with sharing class AvailableProductsController extends AuraController {
         validateId(orderId, Order.getSObjectType());
         try {
             return AvailableProductsService.getOrderProductsByOrderId(orderId);
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled(Cacheable=true)
+    public static Integer getOrderAvailableProductsCount(String orderId) {
+        validateId(orderId, Order.getSObjectType());
+        try {
+            return AvailableProductsService.getOrderAvailableProductsCount(orderId);
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

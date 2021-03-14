@@ -12,26 +12,31 @@
             </div>
             <div class="slds-media__body">
                 <h2 class="slds-card__header-title">
-                    Available Products
+                    Available Products {productsAmountLabel}
                 </h2>
             </div>
             </header>
         </div>
         <div>
             <template if:true={availableProducts}>
-                <lightning-datatable
-                    key-field="id"
-                    columns={columns}
-                    data={availableProducts}
-                    hide-checkbox-column
-                    default-sort-direction={defaultSortDirection}
-                    sorted-direction={sortDirection}
-                    sorted-by={sortedBy}
-                    onsort={onHandleSort}
-                    column-widths-mode="auto"
-                    resize-column-disabled="true"
-                    onrowaction={handleRowAction}>
-                </lightning-datatable>
+                <div style="height: 500px">
+                    <lightning-datatable
+                        key-field="id"
+                        columns={columns}
+                        data={availableProducts}
+                        hide-checkbox-column
+                        default-sort-direction={defaultSortDirection}
+                        sorted-direction={sortDirection}
+                        sorted-by={sortedBy}
+                        onsort={onHandleSort}
+                        column-widths-mode="auto"
+                        resize-column-disabled="true"
+                        enable-infinite-loading="true"
+                        onloadmore={loadMoreProducts}
+                        load-more-offset="10"
+                        onrowaction={handleRowAction}>
+                    </lightning-datatable>
+                </div>
             </template>
         </div>
         <div if:true={showSpinner}>

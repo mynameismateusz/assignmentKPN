@@ -5,13 +5,23 @@ public with sharing class AvailableProductsService {
      * @param {Id} recordId: Id of an Order
      * @return {List<PricebookEntry>} - empty if Order doesn't have a Pricebook
      */
-    public static List<PricebookEntry> getAvailableProducts(Id orderId) {
+    public static List<PricebookEntry> getOrderAvailableProducts(Id orderId, Integer amount, Integer offset) {
         Map<Id, Order> orders = new Map<Id, Order>(OrderSelector.getOrdersByIds(new Set<Id>{orderId}));
         Id pricebookId = orders.get(orderId)?.Pricebook2Id;
         if (pricebookId == null) {
             return new List<PricebookEntry>();
         }
-        return PricebookEntrySelector.getPricebookEntriesByPricebookId(pricebookId);
+        return PricebookEntrySelector.getPricebookEntriesByPricebookId(pricebookId, amount, offset);
+    }
+
+    public static Integer getOrderAvailableProductsCount(Id orderId) {
+        Map<Id, Order> orders = new Map<Id, Order>(OrderSelector.getOrdersByIds(new Set<Id>{orderId}));
+        Id pricebookId = orders.get(orderId)?.Pricebook2Id;
+        if (pricebookId == null) {
+            return 0;
+        }
+        AggregateResult res = PricebookEntrySelector.getPricebookEntriesCountByPricebookId(pricebookId);
+        return (Integer) res.get('Amount');
     }
 
     /**
