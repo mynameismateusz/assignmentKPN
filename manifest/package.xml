@@ -7,6 +7,10 @@
         <members>AvailableProductsController</members>
         <members>AvailableProductsService</members>
         <members>DMLService</members>
+        <members>GODISMock</members>
+        <members>GODISOrderConfirmRequest</members>
+        <members>GODISService</members>
+        <members>HTPPService</members>
         <members>OrderItemSelector_Test</members>
         <members>OrderItemSelector</members>
         <members>OrderProductsController_Test</members>
@@ -44,6 +48,8 @@
 		<name>NamedCredential</name>
 	</types>
     <types>
+        <members>commonStyles</members>
+        <members>objectBuilder</members>
         <members>orderAvailableProducts</members>
         <members>orderProducts</members>
         <members>utils</members>
