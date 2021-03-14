@@ -120,4 +120,36 @@ private class AvailableProductsController_Test {
         System.assertEquals(o.Id, insertedItem.OrderId, 'Order Id be set correctly');
         System.assertEquals(oi.Quantity + QUANTITY_TO_ADD, insertedItem.Quantity, 'Quantity be set correctly');
     }
+
+    @IsTest
+    static void getOrderAvailableProductsCount_POS() {
+        //GIVEN
+        Order o = [SELECT Id, Pricebook2Id FROM Order LIMIT 1];
+        PricebookEntry entry = [SELECT Id, Product2Id FROM PricebookEntry LIMIT 1];
+        List<OrderItem> oi = TestDataFactory.createOrderItems(10, o.Id, entry);
+
+        //WHEN
+        Test.startTest();
+        Integer count = AvailableProductsController.getOrderAvailableProductsCount(o.Id);
+        Test.stopTest();
+
+        //THEN
+        System.assertEquals(oi.size(), count, 'Returned count should match the amount of items');
+    }
+
+    @IsTest
+    static void getOrderAvailableProductsCount_NEG() {
+        //GIVEN
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+        // Order's Pricebook Id is empty
+        Order o = TestDataFactory.insertOrders(1, acc.Id, null)[0];
+
+        //WHEN
+        Test.startTest();
+        Integer count = AvailableProductsController.getOrderAvailableProductsCount(o.Id);
+        Test.stopTest();
+
+        //THEN
+        System.assertEquals(0, count, 'We expected 0 items');
+    }
 }
