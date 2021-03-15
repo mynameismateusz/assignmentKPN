@@ -77,7 +77,7 @@ Download the showcase clip [here](https://user-images.githubusercontent.com/8053
 
 1. If you want to verify Order Confirmation requests, you can do it [here](https://godis-orders.requestcatcher.com/).
 
-1. What's **GODIS**? Godis means 'Candy' in Swedish!
+1. What's **GODIS**? It's the name of the imaginary Order Confirmation system. Godis means 'Candy' in Swedish!
 <img src="https://user-images.githubusercontent.com/80535755/111089447-39d13800-852c-11eb-8a1b-5327ac7c9084.png" width="350" title="Swedish Fish Candy">
 
 
