@@ -114,8 +114,10 @@ export default class OrderProducts extends LightningElement {
     handleAddProductMsg(newItem) {
         let existingItem = this.products.find(p => p.Id === newItem.Id);
         if (existingItem) {
-            // If item with the same Id was found in the list - update the Quantity
+            // If item with the same Id was found in the list - update the Quantity and Total
             existingItem.Quantity = newItem.Quantity;
+            // TotalPrice doesnt always come updated from the backend
+            existingItem.TotalPrice = newItem.UnitPrice * newItem.Quantity;
             this.products = [...this.products];
         } else {
             // If such item is not in the list, just flatten its Name and add it
