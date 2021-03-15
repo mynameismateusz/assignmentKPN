@@ -7,6 +7,8 @@ import ACTIVATE_ORDER_CHANNEL from '@salesforce/messageChannel/Activate_Order__c
 import getOrderProducts from '@salesforce/apex/OrderProductsController.getOrderProducts';
 import activateOrder from '@salesforce/apex/OrderProductsController.activateOrder';
 import ORDER_STATUS from '@salesforce/schema/Order.Status';
+import ORDER_CONTRACT from '@salesforce/schema/Order.ContractId';
+import ORDER_CONTRACT_STATUS from '@salesforce/schema/Order.Contract.Status';
 import ContactAdminErr from '@salesforce/label/c.ContactAdminErr';
 import OrderActivated from '@salesforce/label/c.OrderActivated';
 import OrderNotActivatedErr from '@salesforce/label/c.OrderNotActivatedErr';
@@ -63,12 +65,20 @@ export default class OrderProducts extends LightningElement {
         }
     }
     /** Order record is queried to verify its Status and steer 'Activate' button availability */
-    @wire(getRecord, { recordId: '$recordId', fields: [], optionalFields: [ORDER_STATUS] })
+    @wire(getRecord, { recordId: '$recordId', fields: [], optionalFields: [ORDER_STATUS, ORDER_CONTRACT, ORDER_CONTRACT_STATUS] })
     order;
 
-    /** Verifies Order status. 'Activate' button is disabled if Order is already Active */
-    get isActivated() {
-        return getFieldValue(this.order.data, ORDER_STATUS) === 'Activated' ? true : false;
+    /**
+     * Verifies if Order cant be activated.
+     * Order needs to have at least one Product, can't be already activated and can't have an inactive Contract.
+     */
+    get cannotActivate() {
+        const isActivated = getFieldValue(this.order.data, ORDER_STATUS) === 'Activated';
+        let hasInactiveContract;
+        if (getFieldValue(this.order.data, ORDER_CONTRACT)) {
+            hasInactiveContract = getFieldValue(this.order.data, ORDER_CONTRACT_STATUS) !== 'Activated'
+        }
+        return isActivated || hasInactiveContract || !this.hasProducts ? true : false;
     }
 
     /** Returns amount of Order Products */
