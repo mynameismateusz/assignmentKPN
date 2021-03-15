@@ -2,6 +2,7 @@
 
 -   [Installing project using a Scratch Org](#installing-project-using-a-scratch-org)
 -   [FAQ](#faq)
+-   [Showcase clip](#showcase)
 -   [My own thoughts](#my-own-thoughts)
 
 ## Installing project using a Scratch Org
@@ -62,12 +63,22 @@
 
 1. Have fun! :)
 
+## Showcase
+
+
+https://user-images.githubusercontent.com/80535755/111089419-1908e280-852c-11eb-938a-3015b3ed51d2.mov
+
+#### Empty lists
+<img width="1329" alt="EmptyList" src="https://user-images.githubusercontent.com/80535755/111089434-2c1bb280-852c-11eb-8758-958c926c85d3.png">
+
+
 ## FAQ
 
 1. If you want to verify Order Confirmation requests, you can do it [here](https://godis-orders.requestcatcher.com/).
 
 1. What's **GODIS**? Godis means 'Candy' in Swedish!
-<img src="https://www.pngkey.com/png/full/313-3133225_swedish-fish-soft-chewy-candy-2oz-swedish-fish.png" width="350" title="Swedish Fish Candy">
+<img src="https://user-images.githubusercontent.com/80535755/111089447-39d13800-852c-11eb-8a1b-5327ac7c9084.png" width="350" title="Swedish Fish Candy">
+
 
 ## My own thoughts
 
