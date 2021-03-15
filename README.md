@@ -65,8 +65,8 @@
 
 ## Showcase
 
-
-https://user-images.githubusercontent.com/80535755/111089419-1908e280-852c-11eb-938a-3015b3ed51d2.mov
+<img src="img/Showcase.gif">
+Download the showcase clip [here](https://user-images.githubusercontent.com/80535755/111089419-1908e280-852c-11eb-938a-3015b3ed51d2.mov)
 
 #### Empty lists
 <img width="1329" alt="EmptyList" src="https://user-images.githubusercontent.com/80535755/111089434-2c1bb280-852c-11eb-8758-958c926c85d3.png">
