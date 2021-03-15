@@ -68,7 +68,8 @@
 <img src="img/Showcase.gif">
 
 #### Empty lists
-<img width="1329" alt="EmptyList" src="https://user-images.githubusercontent.com/80535755/111089434-2c1bb280-852c-11eb-8758-958c926c85d3.png">
+
+<img width="1344" alt="Empty List" src="https://user-images.githubusercontent.com/80535755/111164001-e8fa2780-859d-11eb-979d-3a73e9250093.png">
 
 
 ## FAQ
