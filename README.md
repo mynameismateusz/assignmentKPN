@@ -1,8 +1,8 @@
 ## Table of Contents
 
 -   [Installing project using a Scratch Org](#installing-project-using-a-scratch-org)
--   [FAQ](#faq)
 -   [Showcase clip](#showcase)
+-   [FAQ](#faq)
 -   [My own thoughts](#my-own-thoughts)
 
 ## Installing project using a Scratch Org
