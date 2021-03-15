@@ -6,12 +6,8 @@ public with sharing class AvailableProductsService {
      * @return {List<PricebookEntry>} - empty if Order doesn't have a Pricebook
      */
     public static List<PricebookEntry> getOrderAvailableProducts(Id orderId, Integer amount, Integer offset) {
-        Map<Id, Order> orders = new Map<Id, Order>(OrderSelector.getOrdersByIds(new Set<Id>{orderId}));
-        Id pricebookId = orders.get(orderId)?.Pricebook2Id;
-        if (pricebookId == null) {
-            return new List<PricebookEntry>();
-        }
-        return PricebookEntrySelector.getPricebookEntriesByPricebookId(pricebookId, amount, offset);
+        Order o = OrderSelector.getOrdersByIds(new Set<Id>{orderId})[0];
+        return PricebookEntrySelector.getPricebookEntriesByPricebookId(o.Pricebook2Id, amount, offset);
     }
 
     /**
@@ -20,12 +16,8 @@ public with sharing class AvailableProductsService {
      * @return {Integer} amount of PricebookEntries
      */
     public static Integer getOrderAvailableProductsCount(Id orderId) {
-        Map<Id, Order> orders = new Map<Id, Order>(OrderSelector.getOrdersByIds(new Set<Id>{orderId}));
-        Id pricebookId = orders.get(orderId)?.Pricebook2Id;
-        if (pricebookId == null) {
-            return 0;
-        }
-        AggregateResult res = PricebookEntrySelector.getPricebookEntriesCountByPricebookId(pricebookId);
+        Order o = OrderSelector.getOrdersByIds(new Set<Id>{orderId})[0];
+        AggregateResult res = PricebookEntrySelector.getPricebookEntriesCountByPricebookId(o.Pricebook2Id);
         return (Integer) res.get('Amount');
     }
 
