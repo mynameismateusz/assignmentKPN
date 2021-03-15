@@ -47,6 +47,28 @@ private class AvailableProductsController_Test {
     }
 
     @IsTest
+    static void getAvailableProducts_OrderNotFound_NEG() {
+        //GIVEN
+        Account acc = [SELECT Id FROM Account LIMIT 1];
+        Order o = TestDataFactory.insertOrders(1, acc.Id, null)[0];
+        final String orderId = o.Id;
+        delete o;
+        Boolean exceptionThrown = false;
+
+        //WHEN
+        Test.startTest();
+        try {
+            AvailableProductsController.getAvailableProducts(orderId, 1, 0);
+        } catch (AuraHandledException e) {
+            exceptionThrown = true;
+        }
+        Test.stopTest();
+
+        //THEN
+        System.assertEquals(true, exceptionThrown, 'Exception should be thrown');
+    }
+
+    @IsTest
     static void getOrderProducts_POS() {
         //GIVEN
         Order o = [SELECT Id, Pricebook2Id FROM Order LIMIT 1];
